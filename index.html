@@ -3,54 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA PRO - Hall da Fama</title>
+    <title>FIFA LEGENDS - Hall da Fama</title>
     <style>
-        :root { --bg: #050505; --card: #111; --neon: #00ff87; --text: #fff; --dim: #666; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
+        :root { --bg: #050505; --card: #111; --neon: #00ff87; --text: #fff; --dim: #666; --gold: #ffd700; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 1000px; }
+        .container { width: 100%; max-width: 1100px; }
         
-        header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--neon); padding-bottom: 10px; }
+        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--neon); padding-bottom: 10px; }
         
-        /* Destaques Rápidos */
-        .highlights-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; }
-        .badge { background: #1a1a1a; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid #333; display: flex; align-items: center; gap: 5px; }
-        .badge b { color: var(--neon); }
-
         .history-nav { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; justify-content: center; }
-        select { background: #000; color: var(--neon); border: 1px solid var(--neon); padding: 8px; border-radius: 5px; font-weight: bold; cursor: pointer; outline: none; }
+        select { background: #000; color: var(--neon); border: 1px solid var(--neon); padding: 8px; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
-        .table-container { background: var(--card); border-radius: 12px; padding: 15px; overflow-x: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        table { width: 100%; border-collapse: collapse; min-width: 850px; }
+        .table-container { background: var(--card); border-radius: 12px; padding: 15px; overflow-x: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-bottom: 40px; }
+        table { width: 100%; border-collapse: collapse; min-width: 950px; }
         th { text-align: left; color: var(--dim); font-size: 0.65rem; text-transform: uppercase; padding: 12px; border-bottom: 1px solid #222; }
         td { padding: 14px 12px; border-bottom: 1px solid #1a1a1a; font-size: 0.9rem; }
         
-        /* Destaque das Posições */
-        .rank-1 { background: rgba(255, 215, 0, 0.05); }
-        .rank-1 .pos { color: var(--gold); font-size: 1.2rem; }
-        .rank-2 .pos { color: var(--silver); }
-        .rank-3 .pos { color: var(--bronze); }
+        /* Galeria de Campeões */
+        .hall-title { color: var(--gold); text-align: center; font-size: 1.5rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .champions-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; width: 100%; }
+        .champ-card { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border: 1px solid #333; padding: 15px; border-radius: 12px; text-align: center; border-top: 3px solid var(--gold); }
+        .champ-season { font-size: 0.7rem; color: var(--dim); text-transform: uppercase; margin-bottom: 5px; }
+        .champ-name { font-weight: bold; color: #fff; font-size: 1.1rem; }
 
+        .badge-titulos { background: rgba(255, 215, 0, 0.1); color: var(--gold); padding: 4px 10px; border-radius: 20px; font-weight: bold; border: 1px solid var(--gold); }
         .pts-oficiais { color: var(--neon); font-weight: 900; }
-        .bonus-box { background: rgba(0,255,135,0.1); border: 1px solid var(--neon); color: var(--neon); padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; display: inline-block; }
-
-        /* Admin */
-        #adminArea { display: none; background: #1a1a1a; padding: 20px; border-radius: 12px; margin-top: 25px; border: 1px solid #333; }
-        .edit-row { display: grid; grid-template-columns: 2fr repeat(5, 1fr) 40px; gap: 8px; margin-bottom: 10px; }
+        
+        /* Botão Admin Discreto */
+        .btn-config { background: none; border: none; color: #111; cursor: pointer; font-size: 0.6rem; margin-top: 50px; }
+        #adminArea { display: none; background: #1a1a1a; padding: 20px; border-radius: 12px; margin-top: 25px; border: 1px solid #333; width: 100%; box-sizing: border-box; }
+        .row-edit { display: grid; grid-template-columns: 2fr repeat(5, 1fr); gap: 5px; margin-bottom: 5px; }
         input { background: #000; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 5px; text-align: center; width: 100%; box-sizing: border-box; }
-        .btn-acao { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-salvar { background: var(--neon); color: #000; }
-        .btn-finish { background: #440000; color: #ff4444; margin-top: 30px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1 style="margin:0;">FIFA <span style="color:var(--neon)">DASHBOARD</span></h1>
+        <h1 style="margin:0;">FIFA <span style="color:var(--neon)">RANKING MASTER</span></h1>
     </header>
-
-    <div class="highlights-bar" id="topStats">
-        </div>
 
     <div class="history-nav">
         <span>Visualizar:</span>
@@ -63,14 +54,12 @@
                 <tr>
                     <th>#</th>
                     <th>Jogador</th>
+                    <th class="col-geral">🏆 Títulos</th>
+                    <th class="col-geral">🎮 Partic.</th>
                     <th>Pts</th>
-                    <th>J</th>
-                    <th>V</th>
-                    <th>E</th>
-                    <th>D</th>
-                    <th>GP</th>
-                    <th>GC</th>
-                    <th>SG</th>
+                    <th>V/E/D</th>
+                    <th>GP/GC</th>
+                    <th>Eficiência %</th>
                     <th>Desempenho</th>
                 </tr>
             </thead>
@@ -78,102 +67,96 @@
         </table>
     </div>
 
-    <button onclick="toggleAdmin()" style="background:none; border:none; color:#222; margin-top:40px; cursor:pointer; font-size: 0.7rem;">Configurações do Sistema</button>
+    <h2 class="hall-title">✨ Galeria de Campeões ✨</h2>
+    <div id="gallery" class="champions-gallery"></div>
+
+    <button onclick="toggleAdmin()" class="btn-config">Config</button>
 
     <div id="adminArea">
-        <h2 style="color:var(--neon); font-size: 1rem; margin-top: 0;">EDITAR DADOS ATUAIS</h2>
         <div id="listaEdit"></div>
-        <button class="btn-acao" onclick="novo()" style="background:none; border: 1px dashed var(--neon); color:var(--neon)">+ Adicionar Participante</button>
-        <button class="btn-acao btn-salvar" onclick="save()">SALVAR ALTERAÇÕES</button>
-        <button class="btn-acao btn-finish" onclick="finish()">🔒 ENCERRAR TEMPORADA E ARQUIVAR</button>
+        <button onclick="novo()" style="width:100%; padding:10px; margin-top:10px; background:none; border: 1px dashed var(--neon); color:var(--neon)">+ Jogador</button>
+        <button onclick="save()" style="width:100%; padding:10px; margin-top:10px; background:var(--neon); color:#000; font-weight:bold">SALVAR</button>
+        <button onclick="finish()" style="width:100%; padding:10px; margin-top:30px; background:red; color:#fff">🔒 ENCERRAR TEMPORADA</button>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('fifa_pro_full_db')) || { atual: [], historico: [] };
-    let vistaAtiva = 'atual';
+    let db = JSON.parse(localStorage.getItem('fifa_final_db')) || { atual: [], historico: [] };
+    let vista = 'atual';
 
-    function changeView(val) { vistaAtiva = val; render(); document.getElementById('adminArea').style.display = 'none'; }
+    function changeView(v) { vista = v; render(); }
 
     function render() {
         const tbody = document.querySelector("#tabelaMaster tbody");
         const selector = document.getElementById('seasonSelector');
-        const statsBar = document.getElementById('topStats');
+        const gallery = document.getElementById('gallery');
         
-        selector.innerHTML = `<option value="atual" ${vistaAtiva === 'atual' ? 'selected' : ''}>Temporada Atual</option>
-                              <option value="geral" ${vistaAtiva === 'geral' ? 'selected' : ''}>Ranking Geral (Acumulado)</option>`;
-        db.historico.forEach((temp, idx) => { selector.innerHTML += `<option value="${idx}" ${vistaAtiva == idx ? 'selected' : ''}>${temp.nome}</option>`; });
+        // Atualiza Selector
+        selector.innerHTML = `<option value="atual" ${vista==='atual'?'selected':''}>Temporada Atual</option><option value="geral" ${vista==='geral'?'selected':''}>Ranking Geral</option>`;
+        db.historico.forEach((t, i) => selector.innerHTML += `<option value="${i}" ${vista==i?'selected':''}>${t.nome}</option>`);
 
-        let lista = [];
-        if (vistaAtiva === 'atual') lista = [...db.atual];
-        else if (vistaAtiva === 'geral') lista = processarGeral();
-        else lista = [...db.historico[vistaAtiva].dados];
+        let lista = (vista === 'atual') ? [...db.atual] : (vista === 'geral' ? processarGeral() : [...db.historico[vista].dados]);
         
-        // Ordenação FIFA
-        lista.sort((a,b) => ((b.v*3)+b.e) - ((a.v*3)+a.e) || b.v - a.v || (b.gp-b.gc) - (a.gp-a.gc));
+        // Esconde colunas de títulos se não for o Geral
+        document.querySelectorAll('.col-geral').forEach(el => el.style.display = (vista === 'geral' ? 'table-cell' : 'none'));
 
-        // Destaques (Melhor Ataque/Defesa)
-        if(lista.length > 0) {
-            let artilheiro = [...lista].sort((a,b) => b.gp - a.gp)[0];
-            let paredao = [...lista].sort((a,b) => a.gc - b.gc)[0];
-            statsBar.innerHTML = `
-                <div class="badge">🔥 Melhor Ataque: <b>${artilheiro.nome} (${artilheiro.gp}G)</b></div>
-                <div class="badge">🛡️ Melhor Defesa: <b>${paredao.nome} (${paredao.gc}G)</b></div>
-            `;
-        }
+        lista.sort((a,b) => (vista === 'geral') ? (b.titulos - a.titulos || b.pts - a.pts) : (b.pts - a.pts || (b.gp-b.gc) - (a.gp-a.gc)));
 
         tbody.innerHTML = lista.map((j, i) => {
-            let pts = (j.v*3)+(j.e*1);
-            let bPos = (i==0?20:(i==1?15:(i==2?10:0)));
-            let bonus = (bPos + (j.gp*2.5) + (j.gc*-2)).toFixed(1);
-            let trofeu = i == 0 ? ' 🏆' : '';
-            
-            return `<tr class="rank-${i+1}">
-                <td class="pos">${i+1}º</td>
-                <td class="nome">${j.nome}${trofeu}</td>
+            let pts = (j.v*3)+j.e;
+            let jogos = j.v+j.e+j.d;
+            let aprov = jogos > 0 ? ((pts / (jogos * 3)) * 100).toFixed(1) : "0.0";
+            let bonus = ((i<3?(20-i*5):0) + (j.gp*2.5) + (j.gc*-2)).toFixed(1);
+            return `<tr>
+                <td>${i+1}º</td>
+                <td style="font-weight:bold">${j.nome} ${i==0?'🏆':''}</td>
+                ${vista==='geral' ? `<td><span class="badge-titulos">${j.titulos}</span></td><td>${j.participacoes}</td>` : ''}
                 <td class="pts-oficiais">${pts}</td>
-                <td>${j.v+j.e+j.d}</td><td>${j.v}</td><td>${j.e}</td><td>${j.d}</td>
-                <td style="color:#00ff87">${j.gp}</td><td style="color:#ff4444">${j.gc}</td>
-                <td style="color:#00ccff">${j.gp-j.gc}</td>
-                <td><span class="bonus-box">${bonus} pts</span></td>
+                <td>${j.v}/${j.e}/${j.d}</td><td>${j.gp}/${j.gc}</td>
+                <td>${aprov}%</td>
+                <td style="color:var(--neon)">${bonus}</td>
             </tr>`;
         }).join('');
+
+        // Renderiza Galeria
+        gallery.innerHTML = db.historico.map(t => {
+            let campeao = [...t.dados].sort((a,b) => ((b.v*3)+b.e) - ((a.v*3)+a.e) || (b.gp-b.gc) - (a.gp-a.gc))[0];
+            return `<div class="champ-card"><div class="champ-season">${t.nome}</div><div class="champ-name">🥇 ${campeao ? campeao.nome : '---'}</div></div>`;
+        }).reverse().join('');
     }
 
     function processarGeral() {
-        let soma = {};
-        [...db.historico.map(h => h.dados), db.atual].forEach(t => t.forEach(j => {
-            if(!soma[j.nome]) soma[j.nome] = {nome:j.nome, v:0, e:0, d:0, gp:0, gc:0};
-            soma[j.nome].v += j.v; soma[j.nome].e += j.e; soma[j.nome].d += j.d;
-            soma[j.nome].gp += j.gp; soma[j.nome].gc += j.gc;
-        }));
-        return Object.values(soma);
+        let res = {};
+        [...db.historico, { dados: db.atual }].forEach(temp => {
+            let ord = [...temp.dados].sort((a,b) => ((b.v*3)+b.e) - ((a.v*3)+a.e) || (b.gp-b.gc) - (a.gp-a.gc));
+            temp.dados.forEach(j => {
+                if(!res[j.nome]) res[j.nome] = {nome:j.nome, v:0, e:0, d:0, gp:0, gc:0, titulos:0, participacoes:0};
+                res[j.nome].v += j.v; res[j.nome].e += j.e; res[j.nome].d += j.d;
+                res[j.nome].gp += j.gp; res[j.nome].gc += j.gc;
+                res[j.nome].participacoes += 1;
+                if(ord[0] && j.nome === ord[0].nome && (j.v+j.e+j.d > 0)) res[j.nome].titulos += 1;
+            });
+        });
+        return Object.values(res).map(j => ({...j, pts: (j.v*3)+j.e}));
     }
 
-    function toggleAdmin() { if(vistaAtiva !== 'atual') return; document.getElementById('adminArea').style.display = 'block'; renderAdmin(); }
-
+    // Admin
+    function toggleAdmin() { document.getElementById('adminArea').style.display = 'block'; renderAdmin(); }
     function renderAdmin() {
         document.getElementById('listaEdit').innerHTML = db.atual.map((j,i) => `
-            <div class="edit-row">
+            <div class="row-edit">
                 <input type="text" value="${j.nome}" onchange="db.atual[${i}].nome=this.value">
                 <input type="number" value="${j.v}" onchange="db.atual[${i}].v=parseInt(this.value)">
                 <input type="number" value="${j.e}" onchange="db.atual[${i}].e=parseInt(this.value)">
                 <input type="number" value="${j.d}" onchange="db.atual[${i}].d=parseInt(this.value)">
                 <input type="number" value="${j.gp}" onchange="db.atual[${i}].gp=parseInt(this.value)">
                 <input type="number" value="${j.gc}" onchange="db.atual[${i}].gc=parseInt(this.value)">
-                <button onclick="remover(${i})" style="color:red; background:none; border:none; cursor:pointer">✖</button>
             </div>
         `).join('');
     }
-
     function novo() { db.atual.push({nome:"Novo", v:0, e:0, d:0, gp:0, gc:0}); renderAdmin(); }
-    function remover(i) { db.atual.splice(i, 1); renderAdmin(); }
-    function save() { localStorage.setItem('fifa_pro_full_db', JSON.stringify(db)); render(); alert("Dados Gravados!"); }
-    
-    function finish() {
-        let n = prompt("Nome da Temporada:");
-        if(n) { db.historico.push({ nome: n, dados: JSON.parse(JSON.stringify(db.atual)) }); db.atual = db.atual.map(j => ({...j, v:0, e:0, d:0, gp:0, gc:0})); save(); }
-    }
+    function save() { localStorage.setItem('fifa_final_db', JSON.stringify(db)); render(); alert("Salvo!"); }
+    function finish() { let n = prompt("Nome da Temporada:"); if(n) { db.historico.push({ nome: n, dados: JSON.parse(JSON.stringify(db.atual)) }); db.atual = db.atual.map(j => ({...j, v:0, e:0, d:0, gp:0, gc:0})); save(); } }
 
     render();
 </script>
