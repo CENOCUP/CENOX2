@@ -3,25 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA PRO - Arquivo de Temporadas</title>
+    <title>FIFA PRO - Hall da Fama</title>
     <style>
-        :root { --bg: #050505; --card: #111; --neon: #00ff87; --text: #fff; --dim: #666; --gold: #ffd700; }
+        :root { --bg: #050505; --card: #111; --neon: #00ff87; --text: #fff; --dim: #666; --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 1000px; }
         
         header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--neon); padding-bottom: 10px; }
         
-        /* Seletor de Histórico */
+        /* Destaques Rápidos */
+        .highlights-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; }
+        .badge { background: #1a1a1a; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid #333; display: flex; align-items: center; gap: 5px; }
+        .badge b { color: var(--neon); }
+
         .history-nav { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; justify-content: center; }
-        select { background: #000; color: var(--neon); border: 1px solid var(--neon); padding: 8px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        select { background: #000; color: var(--neon); border: 1px solid var(--neon); padding: 8px; border-radius: 5px; font-weight: bold; cursor: pointer; outline: none; }
 
         .table-container { background: var(--card); border-radius: 12px; padding: 15px; overflow-x: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
         table { width: 100%; border-collapse: collapse; min-width: 850px; }
         th { text-align: left; color: var(--dim); font-size: 0.65rem; text-transform: uppercase; padding: 12px; border-bottom: 1px solid #222; }
         td { padding: 14px 12px; border-bottom: 1px solid #1a1a1a; font-size: 0.9rem; }
         
+        /* Destaque das Posições */
+        .rank-1 { background: rgba(255, 215, 0, 0.05); }
+        .rank-1 .pos { color: var(--gold); font-size: 1.2rem; }
+        .rank-2 .pos { color: var(--silver); }
+        .rank-3 .pos { color: var(--bronze); }
+
         .pts-oficiais { color: var(--neon); font-weight: 900; }
-        .bonus-box { background: rgba(0,255,135,0.1); border: 1px solid var(--neon); color: var(--neon); padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
+        .bonus-box { background: rgba(0,255,135,0.1); border: 1px solid var(--neon); color: var(--neon); padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; display: inline-block; }
 
         /* Admin */
         #adminArea { display: none; background: #1a1a1a; padding: 20px; border-radius: 12px; margin-top: 25px; border: 1px solid #333; }
@@ -36,15 +46,15 @@
 
 <div class="container">
     <header>
-        <h1 style="margin:0;">FIFA <span style="color:var(--neon)">HISTORY</span></h1>
+        <h1 style="margin:0;">FIFA <span style="color:var(--neon)">DASHBOARD</span></h1>
     </header>
+
+    <div class="highlights-bar" id="topStats">
+        </div>
 
     <div class="history-nav">
         <span>Visualizar:</span>
-        <select id="seasonSelector" onchange="changeView(this.value)">
-            <option value="atual">Temporada Atual (Em Aberto)</option>
-            <option value="geral">Ranking Geral (Acumulado)</option>
-            </select>
+        <select id="seasonSelector" onchange="changeView(this.value)"></select>
     </div>
 
     <div class="table-container">
@@ -61,75 +71,70 @@
                     <th>GP</th>
                     <th>GC</th>
                     <th>SG</th>
-                    <th>Desempenho (Bônus)</th>
+                    <th>Desempenho</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
 
-    <button onclick="toggleAdmin()" style="background:none; border:none; color:#222; margin-top:40px; cursor:pointer; font-size: 0.7rem;">Configurações</button>
+    <button onclick="toggleAdmin()" style="background:none; border:none; color:#222; margin-top:40px; cursor:pointer; font-size: 0.7rem;">Configurações do Sistema</button>
 
     <div id="adminArea">
-        <h2 id="adminTitle" style="color:var(--neon); font-size: 1rem; margin-top: 0;">EDITAR TEMPORADA ATUAL</h2>
+        <h2 style="color:var(--neon); font-size: 1rem; margin-top: 0;">EDITAR DADOS ATUAIS</h2>
         <div id="listaEdit"></div>
-        <button class="btn-acao" onclick="novo()" style="background:none; border: 1px dashed var(--neon); color:var(--neon)">+ Adicionar Jogador</button>
+        <button class="btn-acao" onclick="novo()" style="background:none; border: 1px dashed var(--neon); color:var(--neon)">+ Adicionar Participante</button>
         <button class="btn-acao btn-salvar" onclick="save()">SALVAR ALTERAÇÕES</button>
         <button class="btn-acao btn-finish" onclick="finish()">🔒 ENCERRAR TEMPORADA E ARQUIVAR</button>
     </div>
 </div>
 
 <script>
-    // db.historico agora é uma lista de objetos: { nome: "Temporada 1", dados: [...] }
-    let db = JSON.parse(localStorage.getItem('fifa_history_db')) || {
-        atual: [],
-        historico: []
-    };
-
+    let db = JSON.parse(localStorage.getItem('fifa_pro_full_db')) || { atual: [], historico: [] };
     let vistaAtiva = 'atual';
 
-    function changeView(val) {
-        vistaAtiva = val;
-        render();
-        // Esconde admin se não estiver na atual
-        document.getElementById('adminArea').style.display = 'none';
-    }
+    function changeView(val) { vistaAtiva = val; render(); document.getElementById('adminArea').style.display = 'none'; }
 
     function render() {
         const tbody = document.querySelector("#tabelaMaster tbody");
         const selector = document.getElementById('seasonSelector');
+        const statsBar = document.getElementById('topStats');
         
-        // Atualiza o seletor com as temporadas que existem no histórico
         selector.innerHTML = `<option value="atual" ${vistaAtiva === 'atual' ? 'selected' : ''}>Temporada Atual</option>
                               <option value="geral" ${vistaAtiva === 'geral' ? 'selected' : ''}>Ranking Geral (Acumulado)</option>`;
-        
-        db.historico.forEach((temp, idx) => {
-            selector.innerHTML += `<option value="${idx}" ${vistaAtiva == idx ? 'selected' : ''}>${temp.nome}</option>`;
-        });
+        db.historico.forEach((temp, idx) => { selector.innerHTML += `<option value="${idx}" ${vistaAtiva == idx ? 'selected' : ''}>${temp.nome}</option>`; });
 
         let lista = [];
-        if (vistaAtiva === 'atual') {
-            lista = [...db.atual];
-        } else if (vistaAtiva === 'geral') {
-            lista = processarGeral();
-        } else {
-            lista = [...db.historico[vistaAtiva].dados];
-        }
+        if (vistaAtiva === 'atual') lista = [...db.atual];
+        else if (vistaAtiva === 'geral') lista = processarGeral();
+        else lista = [...db.historico[vistaAtiva].dados];
         
-        // Ordenação padrão FIFA
+        // Ordenação FIFA
         lista.sort((a,b) => ((b.v*3)+b.e) - ((a.v*3)+a.e) || b.v - a.v || (b.gp-b.gc) - (a.gp-a.gc));
+
+        // Destaques (Melhor Ataque/Defesa)
+        if(lista.length > 0) {
+            let artilheiro = [...lista].sort((a,b) => b.gp - a.gp)[0];
+            let paredao = [...lista].sort((a,b) => a.gc - b.gc)[0];
+            statsBar.innerHTML = `
+                <div class="badge">🔥 Melhor Ataque: <b>${artilheiro.nome} (${artilheiro.gp}G)</b></div>
+                <div class="badge">🛡️ Melhor Defesa: <b>${paredao.nome} (${paredao.gc}G)</b></div>
+            `;
+        }
 
         tbody.innerHTML = lista.map((j, i) => {
             let pts = (j.v*3)+(j.e*1);
             let bPos = (i==0?20:(i==1?15:(i==2?10:0)));
             let bonus = (bPos + (j.gp*2.5) + (j.gc*-2)).toFixed(1);
-            return `<tr>
-                <td style="color:${i<3?'var(--neon)':''}">${i+1}º</td>
-                <td style="font-weight:bold">${j.nome}</td>
+            let trofeu = i == 0 ? ' 🏆' : '';
+            
+            return `<tr class="rank-${i+1}">
+                <td class="pos">${i+1}º</td>
+                <td class="nome">${j.nome}${trofeu}</td>
                 <td class="pts-oficiais">${pts}</td>
                 <td>${j.v+j.e+j.d}</td><td>${j.v}</td><td>${j.e}</td><td>${j.d}</td>
                 <td style="color:#00ff87">${j.gp}</td><td style="color:#ff4444">${j.gc}</td>
-                <td>${j.gp-j.gc}</td>
+                <td style="color:#00ccff">${j.gp-j.gc}</td>
                 <td><span class="bonus-box">${bonus} pts</span></td>
             </tr>`;
         }).join('');
@@ -145,12 +150,7 @@
         return Object.values(soma);
     }
 
-    // Admin Functions
-    function toggleAdmin() { 
-        if(vistaAtiva !== 'atual') { alert("Só é possível editar a Temporada Atual!"); return; }
-        document.getElementById('adminArea').style.display = 'block'; 
-        renderAdmin(); 
-    }
+    function toggleAdmin() { if(vistaAtiva !== 'atual') return; document.getElementById('adminArea').style.display = 'block'; renderAdmin(); }
 
     function renderAdmin() {
         document.getElementById('listaEdit').innerHTML = db.atual.map((j,i) => `
@@ -168,15 +168,11 @@
 
     function novo() { db.atual.push({nome:"Novo", v:0, e:0, d:0, gp:0, gc:0}); renderAdmin(); }
     function remover(i) { db.atual.splice(i, 1); renderAdmin(); }
-    function save() { localStorage.setItem('fifa_history_db', JSON.stringify(db)); render(); alert("Salvo!"); }
+    function save() { localStorage.setItem('fifa_pro_full_db', JSON.stringify(db)); render(); alert("Dados Gravados!"); }
     
     function finish() {
-        let nomeTemp = prompt("Dê um nome para esta temporada (ex: Temporada 1 - 2026):");
-        if(nomeTemp) {
-            db.historico.push({ nome: nomeTemp, dados: JSON.parse(JSON.stringify(db.atual)) });
-            db.atual = db.atual.map(j => ({...j, v:0, e:0, d:0, gp:0, gc:0}));
-            save();
-        }
+        let n = prompt("Nome da Temporada:");
+        if(n) { db.historico.push({ nome: n, dados: JSON.parse(JSON.stringify(db.atual)) }); db.atual = db.atual.map(j => ({...j, v:0, e:0, d:0, gp:0, gc:0})); save(); }
     }
 
     render();
